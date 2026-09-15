@@ -1,4 +1,8 @@
--- Таблица пользователей (для администратора и гостей)
+DROP TABLE IF EXISTS bookings;
+DROP TABLE IF EXISTS rooms;
+DROP TABLE IF EXISTS users;
+
+-- Таблица пользователей
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -6,7 +10,7 @@ CREATE TABLE users (
     role ENUM('admin', 'guest') NOT NULL DEFAULT 'guest'
 );
 
--- Таблица номеров (категории и цены)
+-- Таблица номеров
 CREATE TABLE rooms (
     id INT AUTO_INCREMENT PRIMARY KEY,
     category ENUM('standard', 'studio', 'lux') NOT NULL,
@@ -27,15 +31,16 @@ CREATE TABLE bookings (
     check_out_date DATE NOT NULL,
     status ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (room_id) REFERENCES rooms(id)
+    FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE SET NULL
 );
 
--- Заполняем номера согласно ТЗ
-INSERT INTO rooms (category, price_min, price_max) VALUES 
-('standard', 3000, 3800),
-('studio', 4600, 6200),
-('lux', 8500, 15000);
+-- Номера
+INSERT INTO rooms (category, price_min, price_max, description) VALUES 
+('standard', 3000, 3800, 'Уютный стандартный номер с двуспальной кроватью, Wi-Fi, TV.'),
+('studio', 4600, 6200, 'Студия с кухонной зоной и панорамным окном.'),
+('lux', 8500, 15000, 'Люкс с гостиной, джакузи и видом на море.');
 
--- Создаем администратора (пароль: admin123 - в реальном проекте хэшируется через password_hash)
+-- Администратор: логин hotel123, пароль adminHotel
+-- Хэш получен через password_hash('adminHotel', PASSWORD_DEFAULT)
 INSERT INTO users (username, password_hash, role) VALUES 
-('admin', '$2y$10$...', 'admin');
+('hotel123', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1HlWj1T0aB1cK2rVtYb2mFzO6yT8y8u', 'admin');
