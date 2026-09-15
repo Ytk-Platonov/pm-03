@@ -17,4 +17,3 @@ try {
 } catch (\PDOException $e) {
     die("Ошибка подключения к базе данных: " . $e->getMessage());
 }
-?>
